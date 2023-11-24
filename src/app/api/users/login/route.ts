@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
         console.log(reqBody);
 
         const user = await User.findOne({ email })
-        console.log('user foind', user)
+        console.log('user found', user)
         if (!user) {
             return NextResponse.json({ error: "User does not exist" },
                 { status: 400 })
