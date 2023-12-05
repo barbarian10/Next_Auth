@@ -1,9 +1,13 @@
 "use client";
-import Link from "next/link";
+
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import  toast, {Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
+import Input from "@/components/ui/Input";
+import ForgotLoginSignup from "@/components/ui/ForgotLoginSignup";
+import SubmitLogic from "@/components/ui/SubmitLogic";
+import ShowPassBtn from "@/components/ui/ShowPassBtn";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -11,8 +15,8 @@ export default function LoginPage() {
         email: "",
         password: "",
     })
-
-    const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
 
     const onLogin = async () => {
@@ -28,6 +32,8 @@ export default function LoginPage() {
         }
     }
 
+
+
     useEffect(() => {
         if (user.email.length > 0 && user.password.length > 0) {
             setButtonDisabled(false);
@@ -37,41 +43,50 @@ export default function LoginPage() {
     }, [user])
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        <section className="flex items-center 
+        justify-center min-h-screen py-2 bg-gray-300">
             <Toaster />
-            <h1>{loading ? "Processing" : "Login"}</h1>
-            <hr />
-            <label htmlFor="email">email</label>
-            <input
-                className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
-                id="email"
-                type="text"
-                value={user.email}
-                onChange={(e) => setUser({
-                    ...user,
-                    email: e.target.value
-                })
-                }
-                placeholder="email"
-            />
-            <label htmlFor="password">password</label>
-            <input
-                className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
-                id="password"
-                type="password"
-                value={user.password}
-                onChange={(e) => setUser({
-                    ...user,
-                    password: e.target.value
-                })
-                }
-                placeholder="password"
-            />
-            <button
-                onClick={onLogin}
-                className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none
-focus:border-gray-600"> {buttonDisabled ? "Fill all inputs" : "Login"} </button>
-            <Link href="/signup">visit signup page</Link>
-        </div>
+            <div className="bg-white md:w-96 flex flex-col md:rounded-2xl shadow-xl max-w-screen-xl p-3 px-16 relative">
+                <h1 className="font-bold text-2xl text-center text-lime-800 pt-4">Login to your account</h1>
+                <form onSubmit={onLogin} className="flex flex-col gap-3">
+                    <Input
+                        id={"email"}
+                        value={user.email}
+                        type={"email"}
+                        placeholder={"Email"}
+                        onChange={(e: any) => setUser({
+                            ...user,
+                            email: e.target.value
+                        })}
+                    />
+                    <div className="flex flex-row items-center">
+                        <input
+                            className="p-2 border border-gray-300 rounded-lg mt-4 focus:outline-none focus:border-gray-600 w-full flex-grow pr-10"
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={user.password}
+                            onChange={(e) => setUser({
+                                ...user, password: e.target.value
+                            })
+                            }
+                            placeholder="Password"
+                        />
+                        <ShowPassBtn
+                            showPassword={showPassword}
+                            setShowPassword={setShowPassword}
+                        />
+                    </div>
+                    <SubmitLogic
+                        text={"Login"}
+                        disabled={buttonDisabled}
+                    />
+                </form>
+                <ForgotLoginSignup
+                    linkPath={"/signup"}
+                    text={"If you do not have an account"}
+                    btnName="Register"
+                />
+            </div>
+        </section>
     )
 }
