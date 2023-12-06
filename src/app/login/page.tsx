@@ -8,6 +8,7 @@ import Input from "@/components/ui/Input";
 import ForgotLoginSignup from "@/components/ui/ForgotLoginSignup";
 import SubmitLogic from "@/components/ui/SubmitLogic";
 import ShowPassBtn from "@/components/ui/ShowPassBtn";
+import PassValidationText from '@/components/ui/PassValidationText';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -18,13 +19,18 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [buttonDisabled, setButtonDisabled] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [showValidation, setShowValidation] = useState(false);
+    const passLength = user.password.length <= 20;
 
-    const onLogin = async () => {
+    const onLogin = async (e: React.FormEvent) => {
         try {
+            e.preventDefault();
+            if (passLength) {
             setLoading(true)
             const response = await axios.post("/api/users/login", user)
             toast.success("Login success");
             router.push("/profile");
+            }
         } catch (error: any) {
             toast.error("Email or password are incorrect");
         } finally {
@@ -32,15 +38,13 @@ export default function LoginPage() {
         }
     }
 
-
-
     useEffect(() => {
-        if (user.email.length > 0 && user.password.length > 0) {
+        if (user.email.length > 0 && user.password.length > 0 && passLength) {
             setButtonDisabled(false);
         } else {
             setButtonDisabled(true);
         }
-    }, [user])
+    }, [user, passLength])
 
     return (
         <section className="flex items-center 
@@ -76,6 +80,11 @@ export default function LoginPage() {
                             setShowPassword={setShowPassword}
                         />
                     </div>
+                    <p className="text-red-500 text-xs">
+                        {passLength ?
+                            null : "Password should contain less than 20 characters"
+                        }
+                    </p>
                     <SubmitLogic
                         text={"Login"}
                         disabled={buttonDisabled}
