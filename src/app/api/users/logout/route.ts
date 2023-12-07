@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 
-export function GET() {
+export async function GET() {
 
     try {
         const response = NextResponse.json(

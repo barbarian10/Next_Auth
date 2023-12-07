@@ -32,7 +32,7 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
                 //add to .env file
             }
         });
-
+        
         const mailOptions = {
             from: 'mrteddybad@gmail.com',
             to: email,
