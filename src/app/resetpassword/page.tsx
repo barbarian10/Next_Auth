@@ -47,6 +47,7 @@ export default function forgotPassword() {
                 router.push("/login");
             }
         } catch (error: any) {
+            toast.error(error)
             setError(true);
             console.log("Error:", error);
             console.log("Error response:", error.response);
