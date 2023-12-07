@@ -24,12 +24,10 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
         }
 
         const transport = nodemailer.createTransport({
-            host: "sandbox.smtp.mailtrap.io",
-            port: 2525,
+            host: "gmail",
             auth: {
-                user: process.env.MAILER_USER,
-                pass: process.env.MAILER_PASS
-                //add to .env file
+                user: process.env.GOOGLE_USER,
+                pass: process.env.GOOGLE_PASS
             }
         });
         
